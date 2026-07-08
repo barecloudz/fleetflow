@@ -1,26 +1,232 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── LIGHT MODE ─────────────────────────────────────────────── */
+:root {
+  --background: oklch(0.97 0.005 255);
+  --foreground: oklch(0.15 0.02 255);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.02 255);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.02 255);
+
+  --primary: oklch(0.50 0.22 255);
+  --primary-foreground: oklch(0.98 0 0);
+
+  --secondary: oklch(0.93 0.01 255);
+  --secondary-foreground: oklch(0.25 0.02 255);
+
+  --muted: oklch(0.93 0.008 255);
+  --muted-foreground: oklch(0.50 0.02 255);
+
+  --accent: oklch(0.50 0.22 255 / 10%);
+  --accent-foreground: oklch(0.40 0.20 255);
+
+  --destructive: oklch(0.55 0.22 22);
+
+  --border: oklch(0.88 0.01 255);
+  --input: oklch(0.88 0.01 255);
+  --ring: oklch(0.50 0.22 255 / 40%);
+
+  --chart-1: oklch(0.50 0.22 255);
+  --chart-2: oklch(0.58 0.18 220);
+  --chart-3: oklch(0.45 0.20 270);
+  --chart-4: oklch(0.65 0.12 200);
+  --chart-5: oklch(0.40 0.15 240);
+
+  --radius: 0.75rem;
+
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.25 0.02 255);
+  --sidebar-primary: oklch(0.50 0.22 255);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.50 0.22 255 / 8%);
+  --sidebar-accent-foreground: oklch(0.40 0.20 255);
+  --sidebar-border: oklch(0.88 0.01 255);
+  --sidebar-ring: oklch(0.50 0.22 255 / 30%);
+}
+
+/* ── DARK MODE ──────────────────────────────────────────────── */
+.dark {
+  --background: oklch(0.11 0.018 255);
+  --foreground: oklch(0.97 0 0);
+
+  --card: oklch(0.16 0.025 255 / 60%);
+  --card-foreground: oklch(0.97 0 0);
+
+  --popover: oklch(0.14 0.02 255);
+  --popover-foreground: oklch(0.97 0 0);
+
+  --primary: oklch(0.58 0.22 255);
+  --primary-foreground: oklch(0.98 0 0);
+
+  --secondary: oklch(0.18 0.025 255);
+  --secondary-foreground: oklch(0.85 0 0);
+
+  --muted: oklch(0.18 0.02 255);
+  --muted-foreground: oklch(0.60 0.02 255);
+
+  --accent: oklch(0.58 0.22 255 / 15%);
+  --accent-foreground: oklch(0.75 0.18 255);
+
+  --destructive: oklch(0.62 0.22 22);
+
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.58 0.22 255 / 50%);
+
+  --chart-1: oklch(0.58 0.22 255);
+  --chart-2: oklch(0.65 0.18 220);
+  --chart-3: oklch(0.50 0.20 270);
+  --chart-4: oklch(0.72 0.12 200);
+  --chart-5: oklch(0.45 0.15 240);
+
+  --sidebar: oklch(0.09 0.018 255);
+  --sidebar-foreground: oklch(0.85 0 0);
+  --sidebar-primary: oklch(0.58 0.22 255);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.58 0.22 255 / 12%);
+  --sidebar-accent-foreground: oklch(0.75 0.18 255);
+  --sidebar-border: oklch(1 0 0 / 6%);
+  --sidebar-ring: oklch(0.58 0.22 255 / 40%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  html {
+    @apply font-sans;
   }
 }
 
-body {
-  background: var(--background);
+/* ── Light mode: fix hardcoded white text that was written for dark mode ── */
+/* Excludes elements that intentionally have white text on colored backgrounds */
+html:not(.dark) .text-white:not([class*="gradient-blue"]):not([class*="bg-primary"]) {
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Opacity variants — target common patterns */
+html:not(.dark) [class*="text-white\/"] {
+  color: var(--muted-foreground);
+}
+
+/* Fix hardcoded dark borders in light mode */
+html:not(.dark) [class*="border-white\/"] {
+  border-color: var(--border);
+}
+
+/* Fix hardcoded white/transparent backgrounds */
+html:not(.dark) [class*="bg-white\/5"],
+html:not(.dark) [class*="bg-white\/8"],
+html:not(.dark) [class*="hover\:bg-white\/"] {
+  background-color: transparent;
+}
+
+/* Restore white text on explicitly blue/gradient buttons */
+html:not(.dark) .gradient-blue,
+html:not(.dark) [class*="bg-primary"] {
+  --text-override: white;
+}
+html:not(.dark) .gradient-blue .text-white,
+html:not(.dark) .gradient-blue {
+  color: white;
+}
+
+/* ── Glassmorphism utilities ────────────────────────────────── */
+@layer utilities {
+  .glass {
+    background: oklch(1 0 0 / 4%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid oklch(1 0 0 / 8%);
+  }
+
+  .glass-card {
+    background: oklch(0.16 0.025 255 / 50%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid oklch(1 0 0 / 8%);
+  }
+
+  /* Light mode glass-card override */
+  :root:not(.dark) .glass-card {
+    background: oklch(1 0 0 / 90%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid oklch(0.88 0.01 255);
+    box-shadow: 0 1px 3px oklch(0 0 0 / 8%), 0 4px 16px oklch(0 0 0 / 4%);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px oklch(0.58 0.22 255 / 25%);
+  }
+
+  .glow-blue-sm {
+    box-shadow: 0 0 8px oklch(0.58 0.22 255 / 30%);
+  }
+
+  .gradient-blue {
+    background: linear-gradient(135deg, oklch(0.50 0.22 255), oklch(0.65 0.20 235));
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg, oklch(0.70 0.20 255), oklch(0.80 0.15 220));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
