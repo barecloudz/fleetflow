@@ -468,23 +468,25 @@ export default function SettingsPage() {
 
       <main className="flex-1 overflow-y-auto p-6">
         <Tabs defaultValue="shop">
-          <TabsList className="bg-white/5 border border-white/8 h-9 mb-6">
-            <TabsTrigger value="shop" className="text-xs gap-1.5 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
-              <Building2 className="size-3.5" /> Shop Info
-            </TabsTrigger>
-            <TabsTrigger value="staff" className="text-xs gap-1.5 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
-              <Users className="size-3.5" /> Staff
-            </TabsTrigger>
-            <TabsTrigger value="notifications" className="text-xs gap-1.5 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
-              <Bell className="size-3.5" /> Notifications
-            </TabsTrigger>
-            <TabsTrigger value="integrations" className="text-xs gap-1.5 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
-              <Plug className="size-3.5" /> Integrations
-            </TabsTrigger>
-            <TabsTrigger value="billing" className="text-xs gap-1.5 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
-              <CreditCard className="size-3.5" /> Billing
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto -mx-6 px-6 mb-6">
+            <TabsList className="bg-white/5 border border-white/8 h-9 w-max min-w-full">
+              <TabsTrigger value="shop" className="text-xs gap-1.5 whitespace-nowrap data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
+                <Building2 className="size-3.5" /> Shop Info
+              </TabsTrigger>
+              <TabsTrigger value="staff" className="text-xs gap-1.5 whitespace-nowrap data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
+                <Users className="size-3.5" /> Staff
+              </TabsTrigger>
+              <TabsTrigger value="notifications" className="text-xs gap-1.5 whitespace-nowrap data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
+                <Bell className="size-3.5" /> Notifications
+              </TabsTrigger>
+              <TabsTrigger value="integrations" className="text-xs gap-1.5 whitespace-nowrap data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
+                <Plug className="size-3.5" /> Integrations
+              </TabsTrigger>
+              <TabsTrigger value="billing" className="text-xs gap-1.5 whitespace-nowrap data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
+                <CreditCard className="size-3.5" /> Billing
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="shop"><ShopInfoTab /></TabsContent>
           <TabsContent value="staff"><StaffTab /></TabsContent>

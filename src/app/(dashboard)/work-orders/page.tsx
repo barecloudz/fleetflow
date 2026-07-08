@@ -303,12 +303,12 @@ function WorkOrdersTable({ orders, onMarkComplete, onCancel }: WOTableProps) {
           <tr className="border-b border-white/6">
             <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider whitespace-nowrap">WO #</th>
             <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Customer</th>
-            <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Vehicle</th>
-            <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Service</th>
-            <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider whitespace-nowrap">Assigned Tech</th>
+            <th className="hidden sm:table-cell text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Vehicle</th>
+            <th className="hidden md:table-cell text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Service</th>
+            <th className="hidden lg:table-cell text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider whitespace-nowrap">Assigned Tech</th>
             <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Status</th>
             <th className="text-right px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Total</th>
-            <th className="text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Created</th>
+            <th className="hidden sm:table-cell text-left px-4 py-3 text-[11px] font-semibold text-white/40 uppercase tracking-wider">Created</th>
             <th className="px-4 py-3 w-10" />
           </tr>
         </thead>
@@ -328,9 +328,9 @@ function WorkOrdersTable({ orders, onMarkComplete, onCancel }: WOTableProps) {
               <td className="px-4 py-3.5">
                 <span className="text-white font-medium">{wo.customer}</span>
               </td>
-              <td className="px-4 py-3.5 text-white/60 whitespace-nowrap">{wo.vehicle}</td>
-              <td className="px-4 py-3.5 text-white/70 max-w-[180px] truncate">{wo.service}</td>
-              <td className="px-4 py-3.5 whitespace-nowrap">
+              <td className="hidden sm:table-cell px-4 py-3.5 text-white/60 whitespace-nowrap">{wo.vehicle}</td>
+              <td className="hidden md:table-cell px-4 py-3.5 text-white/70 max-w-[180px] truncate">{wo.service}</td>
+              <td className="hidden lg:table-cell px-4 py-3.5 whitespace-nowrap">
                 <span className={wo.tech === "Unassigned" ? "text-white/30 italic text-xs" : "text-white/70 text-sm"}>
                   {wo.tech}
                 </span>
@@ -341,7 +341,7 @@ function WorkOrdersTable({ orders, onMarkComplete, onCancel }: WOTableProps) {
               <td className="px-4 py-3.5 text-right font-medium text-white tabular-nums whitespace-nowrap">
                 ${wo.total.toLocaleString()}
               </td>
-              <td className="px-4 py-3.5 text-white/40 text-xs whitespace-nowrap">{wo.created}</td>
+              <td className="hidden sm:table-cell px-4 py-3.5 text-white/40 text-xs whitespace-nowrap">{wo.created}</td>
               <td className="px-4 py-3.5">
                 <DropdownMenu>
                   <DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="size-7 text-white/30 hover:text-white hover:bg-white/8 opacity-0 group-hover:opacity-100 transition-opacity"><MoreHorizontal className="size-4" /></Button>} />

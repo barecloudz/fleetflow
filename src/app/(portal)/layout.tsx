@@ -1,7 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut, LayoutDashboard, FileText, CreditCard, Calendar } from "lucide-react";
+import { LogOut, LayoutDashboard, FileText, CreditCard, Calendar, Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/portal/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -11,6 +14,8 @@ const navLinks = [
 ];
 
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "oklch(0.11 0.018 255)" }}>
       {/* Top Nav */}
@@ -22,8 +27,8 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
             <span className="text-lg font-bold text-gradient-blue">FleetFlow</span>
           </Link>
 
-          {/* Nav Links */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Nav Links — hidden on mobile */}
+          <nav className="hidden sm:flex items-center gap-1">
             {navLinks.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
@@ -36,7 +41,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
             ))}
           </nav>
 
-          {/* Customer + Logout */}
+          {/* Right side: avatar + logout + hamburger */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2.5">
               <Avatar className="h-8 w-8 border border-white/10">
@@ -53,22 +58,35 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
               <LogOut size={13} />
               <span className="hidden sm:inline">Sign out</span>
             </Link>
+
+            {/* Hamburger — visible only on mobile */}
+            <button
+              type="button"
+              className="sm:hidden flex items-center justify-center size-8 rounded-lg text-white/60 hover:text-white hover:bg-white/8 transition-all"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
           </div>
         </div>
 
-        {/* Mobile Nav */}
-        <div className="md:hidden flex items-center gap-1 px-4 pb-3 overflow-x-auto">
-          {navLinks.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white/60 hover:text-white hover:bg-white/6 transition-all whitespace-nowrap"
-            >
-              <Icon size={13} />
-              {label}
-            </Link>
-          ))}
-        </div>
+        {/* Mobile dropdown */}
+        {menuOpen && (
+          <div className="sm:hidden border-t border-white/8 px-4 py-3 flex flex-col gap-1">
+            {navLinks.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/8 transition-all"
+              >
+                <Icon size={16} />
+                {label}
+              </Link>
+            ))}
+          </div>
+        )}
       </header>
 
       {/* Page Content */}

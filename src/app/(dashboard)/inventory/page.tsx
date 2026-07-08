@@ -458,14 +458,14 @@ export default function InventoryPage() {
   const outOfStockCount = mockParts.filter((p) => getStockStatus(p) === "Out of Stock").length;
   const totalValue = mockParts.reduce((acc, p) => acc + p.inStock * p.unitCost, 0);
 
-  const columnHeaders: Array<{ key: SortKey | null; label: string }> = [
+  const columnHeaders: Array<{ key: SortKey | null; label: string; hide?: string }> = [
     { key: "name", label: "Part Name" },
-    { key: null, label: "Part Number" },
+    { key: null, label: "Part Number", hide: "hidden sm:table-cell" },
     { key: "category", label: "Category" },
     { key: "inStock", label: "In Stock" },
-    { key: null, label: "Reorder Pt" },
-    { key: "unitCost", label: "Unit Cost" },
-    { key: "totalValue", label: "Total Value" },
+    { key: null, label: "Reorder Pt", hide: "hidden sm:table-cell" },
+    { key: "unitCost", label: "Unit Cost", hide: "hidden sm:table-cell" },
+    { key: "totalValue", label: "Total Value", hide: "hidden md:table-cell" },
     { key: null, label: "Status" },
     { key: null, label: "" },
   ];
@@ -597,7 +597,7 @@ export default function InventoryPage() {
                     <th
                       key={col.label || `col-${i}`}
                       onClick={() => col.key && handleSort(col.key)}
-                      className={`px-4 py-3 text-left text-[11px] font-semibold text-white/40 uppercase tracking-wider whitespace-nowrap select-none ${
+                      className={`px-4 py-3 text-left text-[11px] font-semibold text-white/40 uppercase tracking-wider whitespace-nowrap select-none ${col.hide ?? ""} ${
                         col.key ? "cursor-pointer hover:text-white/70 transition-colors" : ""
                       }`}
                     >
@@ -640,7 +640,7 @@ export default function InventoryPage() {
                         </td>
 
                         {/* Part Number */}
-                        <td className="px-4 py-3.5 whitespace-nowrap">
+                        <td className="px-4 py-3.5 whitespace-nowrap hidden sm:table-cell">
                           <span className="font-mono text-[11px] text-white/50 tracking-wider bg-white/5 px-2 py-0.5 rounded">
                             {part.partNumber}
                           </span>
@@ -671,17 +671,17 @@ export default function InventoryPage() {
                         </td>
 
                         {/* Reorder Point */}
-                        <td className="px-4 py-3.5 whitespace-nowrap text-white/40 tabular-nums">
+                        <td className="px-4 py-3.5 whitespace-nowrap text-white/40 tabular-nums hidden sm:table-cell">
                           {part.reorderPoint}
                         </td>
 
                         {/* Unit Cost */}
-                        <td className="px-4 py-3.5 whitespace-nowrap text-white/70 tabular-nums">
+                        <td className="px-4 py-3.5 whitespace-nowrap text-white/70 tabular-nums hidden sm:table-cell">
                           {formatCurrency(part.unitCost)}
                         </td>
 
                         {/* Total Value */}
-                        <td className="px-4 py-3.5 whitespace-nowrap text-white tabular-nums font-medium">
+                        <td className="px-4 py-3.5 whitespace-nowrap text-white tabular-nums font-medium hidden md:table-cell">
                           {formatCurrency(totalVal)}
                         </td>
 

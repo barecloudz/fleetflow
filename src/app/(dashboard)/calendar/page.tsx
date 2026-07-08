@@ -246,7 +246,7 @@ export default function CalendarPage() {
             <Button variant="ghost" size="icon" className="size-8 text-white/50 hover:text-white hover:bg-white/8" onClick={prevWeek}>
               <ChevronLeft className="size-4" />
             </Button>
-            <span className="text-sm font-medium text-white min-w-[220px] text-center">{weekLabel}</span>
+            <span className="text-sm font-medium text-foreground text-center">{weekLabel}</span>
             <Button variant="ghost" size="icon" className="size-8 text-white/50 hover:text-white hover:bg-white/8" onClick={nextWeek}>
               <ChevronRight className="size-4" />
             </Button>
@@ -256,8 +256,39 @@ export default function CalendarPage() {
           </Button>
         </div>
 
-        {/* Week Grid */}
-        <Card className="glass-card border-white/8 overflow-hidden">
+        {/* Mobile: Day List View */}
+        <div className="sm:hidden space-y-3">
+          {weekDates.map((d, di) => {
+            const dayAppts = appointments.filter((a) => a.day === di).sort((a, b) => a.hour - b.hour);
+            return (
+              <div key={di} className={`glass-card rounded-xl border border-border p-3 ${isToday(d) ? "border-primary/30" : ""}`}>
+                <div className={`flex items-center gap-2 mb-2 ${isToday(d) ? "text-primary" : "text-foreground"}`}>
+                  <span className="text-xs font-semibold uppercase tracking-wide">{DAY_NAMES[di]}</span>
+                  <span className={`text-sm font-bold w-7 h-7 rounded-full flex items-center justify-center ${isToday(d) ? "bg-primary text-white" : ""}`}>{d.getDate()}</span>
+                </div>
+                {dayAppts.length === 0 ? (
+                  <p className="text-xs text-muted-foreground py-1">No appointments</p>
+                ) : (
+                  <div className="space-y-2">
+                    {dayAppts.map((a) => (
+                      <div key={a.id} className={`flex items-center gap-3 rounded-lg border px-3 py-2 ${a.color}`}>
+                        <span className="text-xs font-semibold w-10 shrink-0">{formatHour(a.hour)}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold truncate">{a.customer}</p>
+                          <p className="text-[11px] opacity-70 truncate">{a.service}</p>
+                        </div>
+                        <span className="text-[10px] font-bold opacity-60 shrink-0">{a.tech}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Desktop: Week Grid */}
+        <Card className="hidden sm:block glass-card border-white/8 overflow-hidden">
           <CardContent className="p-0">
             {/* Day header row */}
             <div className="grid border-b border-white/8" style={{ gridTemplateColumns: "56px repeat(7, 1fr)" }}>
@@ -326,8 +357,8 @@ export default function CalendarPage() {
           </CardContent>
         </Card>
 
-        {/* Upcoming Today panel */}
-        <Card className="glass-card border-white/8">
+        {/* Upcoming Today panel — desktop only */}
+        <Card className="hidden sm:block glass-card border-white/8">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold text-white flex items-center gap-2">
               <Clock className="size-4 text-primary" />

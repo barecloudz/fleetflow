@@ -88,8 +88,8 @@ function InvoiceTable({ data }: { data: Invoice[] }) {
           <tr className="border-b border-white/6">
             <th className="text-left px-4 py-3 text-xs font-medium text-white/40 uppercase tracking-wide">Invoice</th>
             <th className="text-left px-4 py-3 text-xs font-medium text-white/40 uppercase tracking-wide">Customer</th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-white/40 uppercase tracking-wide hidden md:table-cell">Work Order</th>
-            <th className="text-left px-4 py-3 text-xs font-medium text-white/40 uppercase tracking-wide hidden lg:table-cell">Services</th>
+            <th className="text-left px-4 py-3 text-xs font-medium text-white/40 uppercase tracking-wide hidden sm:table-cell">Work Order</th>
+            <th className="text-left px-4 py-3 text-xs font-medium text-white/40 uppercase tracking-wide hidden sm:table-cell">Services</th>
             <th className="text-right px-4 py-3 text-xs font-medium text-white/40 uppercase tracking-wide">Amount</th>
             <th className="text-left px-4 py-3 text-xs font-medium text-white/40 uppercase tracking-wide hidden md:table-cell">Due Date</th>
             <th className="text-left px-4 py-3 text-xs font-medium text-white/40 uppercase tracking-wide">Status</th>
@@ -105,10 +105,10 @@ function InvoiceTable({ data }: { data: Invoice[] }) {
               <td className="px-4 py-3.5">
                 <span className="text-sm font-medium text-white">{inv.customer}</span>
               </td>
-              <td className="px-4 py-3.5 hidden md:table-cell">
+              <td className="px-4 py-3.5 hidden sm:table-cell">
                 <span className="font-mono text-xs text-white/50">{inv.workOrder}</span>
               </td>
-              <td className="px-4 py-3.5 hidden lg:table-cell">
+              <td className="px-4 py-3.5 hidden sm:table-cell">
                 <span className="text-xs text-white/50 truncate max-w-[200px] block">{inv.services}</span>
               </td>
               <td className="px-4 py-3.5 text-right">

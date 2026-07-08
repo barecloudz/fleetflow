@@ -465,7 +465,7 @@ export default function VehiclesPage() {
 
       <main className="flex-1 overflow-y-auto p-6 space-y-5">
         {/* ── Stats ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-3">
           {[
             {
               label: "Total Vehicles",
@@ -539,20 +539,20 @@ export default function VehiclesPage() {
                 <tr className="border-b border-white/8">
                   {(
                     [
-                      { key: "vehicle", label: "Vehicle" },
-                      { key: null, label: "VIN" },
-                      { key: null, label: "Owner" },
-                      { key: "mileage", label: "Mileage" },
-                      { key: "lastService", label: "Last Service" },
-                      { key: "nextServiceDue", label: "Next Service" },
-                      { key: null, label: "Status" },
-                      { key: null, label: "" },
-                    ] as Array<{ key: SortKey | null; label: string }>
+                      { key: "vehicle", label: "Vehicle", hide: "" },
+                      { key: null, label: "VIN", hide: "hidden sm:table-cell" },
+                      { key: null, label: "Owner", hide: "" },
+                      { key: "mileage", label: "Mileage", hide: "" },
+                      { key: "lastService", label: "Last Service", hide: "hidden sm:table-cell" },
+                      { key: "nextServiceDue", label: "Next Service", hide: "hidden sm:table-cell" },
+                      { key: null, label: "Status", hide: "" },
+                      { key: null, label: "", hide: "" },
+                    ] as Array<{ key: SortKey | null; label: string; hide: string }>
                   ).map((col) => (
                     <th
                       key={col.label || "actions"}
                       onClick={() => col.key && handleSort(col.key)}
-                      className={`px-4 py-3 text-left text-[11px] font-semibold text-white/40 uppercase tracking-wider whitespace-nowrap select-none ${
+                      className={`px-4 py-3 text-left text-[11px] font-semibold text-white/40 uppercase tracking-wider whitespace-nowrap select-none ${col.hide} ${
                         col.key ? "cursor-pointer hover:text-white/70 transition-colors" : ""
                       }`}
                     >
@@ -590,7 +590,7 @@ export default function VehiclesPage() {
                         </td>
 
                         {/* VIN */}
-                        <td className="px-4 py-3.5 whitespace-nowrap">
+                        <td className="px-4 py-3.5 whitespace-nowrap hidden sm:table-cell">
                           <span
                             className="font-mono text-[11px] text-white/50 tracking-wider"
                             title={v.vin}
@@ -612,12 +612,12 @@ export default function VehiclesPage() {
                         </td>
 
                         {/* Last Service */}
-                        <td className="px-4 py-3.5 whitespace-nowrap text-white/50 text-[13px]">
+                        <td className="px-4 py-3.5 whitespace-nowrap text-white/50 text-[13px] hidden sm:table-cell">
                           {formatDate(v.lastService)}
                         </td>
 
                         {/* Next Service */}
-                        <td className="px-4 py-3.5 whitespace-nowrap">
+                        <td className="px-4 py-3.5 whitespace-nowrap hidden sm:table-cell">
                           <Badge
                             className={`text-[10px] font-medium border px-2 py-0.5 rounded-full ${
                               overdue
