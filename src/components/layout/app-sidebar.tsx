@@ -14,6 +14,12 @@ import {
   BarChart3,
   Settings,
   ChevronRight,
+  FileText,
+  ClipboardCheck,
+  MessageSquare,
+  Wrench,
+  ShoppingCart,
+  Megaphone,
 } from "lucide-react";
 import {
   Sidebar,
@@ -30,15 +36,41 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
-const navItems = [
-  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Customers", href: "/customers", icon: Users },
-  { title: "Vehicles", href: "/vehicles", icon: Car },
-  { title: "Work Orders", href: "/work-orders", icon: ClipboardList },
-  { title: "Inventory", href: "/inventory", icon: Package },
-  { title: "Payments", href: "/payments", icon: CreditCard },
-  { title: "Calendar", href: "/calendar", icon: CalendarDays },
-  { title: "Reports", href: "/reports", icon: BarChart3 },
+const navGroups = [
+  {
+    label: "Main",
+    items: [
+      { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      { title: "Work Orders", href: "/work-orders", icon: ClipboardList },
+      { title: "Estimates", href: "/estimates", icon: FileText },
+      { title: "Inspections", href: "/inspections", icon: ClipboardCheck },
+    ],
+  },
+  {
+    label: "People",
+    items: [
+      { title: "Customers", href: "/customers", icon: Users },
+      { title: "Vehicles", href: "/vehicles", icon: Car },
+      { title: "Technicians", href: "/technicians", icon: Wrench },
+    ],
+  },
+  {
+    label: "Operations",
+    items: [
+      { title: "Calendar", href: "/calendar", icon: CalendarDays },
+      { title: "Inventory", href: "/inventory", icon: Package },
+      { title: "Purchase Orders", href: "/purchase-orders", icon: ShoppingCart },
+      { title: "Payments", href: "/payments", icon: CreditCard },
+    ],
+  },
+  {
+    label: "Growth",
+    items: [
+      { title: "Communications", href: "/communications", icon: MessageSquare },
+      { title: "Marketing", href: "/marketing", icon: Megaphone },
+      { title: "Reports", href: "/reports", icon: BarChart3 },
+    ],
+  },
 ];
 
 export function AppSidebar() {
@@ -57,37 +89,39 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-muted-foreground/60 uppercase text-[10px] tracking-widest mb-1">
-            Main
-          </SidebarGroupLabel>
-          <SidebarMenu>
-            {navItems.map((item) => {
-              const active = pathname === item.href || pathname.startsWith(item.href + "/");
-              return (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    render={
-                      <Link href={item.href} className="flex items-center gap-3">
-                        <item.icon className="size-9 shrink-0" />
-                        <span>{item.title}</span>
-                        {active && <ChevronRight className="ml-auto size-3 text-primary/60" />}
-                      </Link>
-                    }
-                    isActive={active}
-                    tooltip={item.title}
-                    className={cn(
-                      "transition-all duration-150",
-                      active
-                        ? "bg-primary/15 text-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                    )}
-                  />
-                </SidebarMenuItem>
-              );
-            })}
-          </SidebarMenu>
-        </SidebarGroup>
+        {navGroups.map((group) => (
+          <SidebarGroup key={group.label}>
+            <SidebarGroupLabel className="text-muted-foreground/60 uppercase text-[10px] tracking-widest mb-1">
+              {group.label}
+            </SidebarGroupLabel>
+            <SidebarMenu>
+              {group.items.map((item) => {
+                const active = pathname === item.href || pathname.startsWith(item.href + "/");
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      render={
+                        <Link href={item.href} className="flex items-center gap-3">
+                          <item.icon className="size-9 shrink-0" />
+                          <span>{item.title}</span>
+                          {active && <ChevronRight className="ml-auto size-3 text-primary/60" />}
+                        </Link>
+                      }
+                      isActive={active}
+                      tooltip={item.title}
+                      className={cn(
+                        "transition-all duration-150",
+                        active
+                          ? "bg-primary/15 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      )}
+                    />
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border p-3">
