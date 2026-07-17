@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { updateShopStatus } from '@/app/actions/admin'
+import { updateShopStatus, extendTrial } from '@/app/actions/admin'
 import { ChevronDown } from 'lucide-react'
 
 const statusOptions = [
@@ -39,6 +39,13 @@ export default function ShopActions({
     setLoading(false)
   }
 
+  async function handleExtendTrial(days: number) {
+    setLoading(true)
+    setOpen(false)
+    await extendTrial(shopId, days)
+    setLoading(false)
+  }
+
   return (
     <div className="relative">
       <button
@@ -69,6 +76,19 @@ export default function ShopActions({
                 style={{ color }}
               >
                 {label}
+              </button>
+            ))}
+
+            <div className="my-1" style={{ borderTop: '1px solid oklch(1 0 0 / 7%)' }} />
+
+            <p className="px-3 py-1.5 text-[10px] text-white/30 uppercase tracking-wider font-medium">Trial</p>
+            {[14, 30].map(days => (
+              <button
+                key={days}
+                onClick={() => handleExtendTrial(days)}
+                className="w-full text-left px-3 py-2 text-sm text-white/60 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                Extend trial +{days} days
               </button>
             ))}
 

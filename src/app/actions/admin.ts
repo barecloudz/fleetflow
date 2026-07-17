@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 async function requireAdmin() {
   const supabase = await createClient()
@@ -14,44 +15,64 @@ async function requireAdmin() {
 
 export async function createShop(prevState: { error?: string; success?: string } | null, formData: FormData) {
   try {
-    const supabase = await requireAdmin()
+    await requireAdmin()
+    const adminClient = createAdminClient()
 
     const name = formData.get('name') as string
-    const email = formData.get('email') as string
+    const ownerEmail = formData.get('owner_email') as string
+    const tempPassword = formData.get('temp_password') as string
     const phone = formData.get('phone') as string
     const plan = formData.get('plan') as string
     const status = formData.get('status') as string
 
-    const { error } = await supabase.from('shops').insert({
-      name,
-      email: email || null,
-      phone: phone || null,
-      plan,
-      subscription_status: status,
+    // Default trial to 14 days from now
+    const trialEndsAt = status === 'trialing'
+      ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+      : null
+
+    // 1. Create the shop row
+    const { data: shop, error: shopError } = await adminClient
+      .from('shops')
+      .insert({ name, phone: phone || null, plan, subscription_status: status, trial_ends_at: trialEndsAt })
+      .select('id')
+      .single()
+
+    if (shopError) return { error: shopError.message }
+
+    // 2. Create the owner's auth account (email_confirm: true = no email verification needed)
+    const { error: userError } = await adminClient.auth.admin.createUser({
+      email: ownerEmail,
+      password: tempPassword,
+      email_confirm: true,
+      user_metadata: {
+        shop_id: shop.id,
+        first_name: '',
+        last_name: '',
+        role: 'owner',
+      },
     })
 
-    if (error) return { error: error.message }
+    if (userError) {
+      // Roll back shop creation if user creation fails
+      await adminClient.from('shops').delete().eq('id', shop.id)
+      return { error: userError.message }
+    }
 
     revalidatePath('/admin/shops')
     revalidatePath('/admin')
-    return { success: `${name} has been created.` }
+    return { success: `${name} created. Owner can log in at /login with ${ownerEmail} and the temporary password you set.` }
   } catch (e: unknown) {
     return { error: e instanceof Error ? e.message : 'Unknown error' }
   }
 }
 
-export async function updateShopStatus(
-  shopId: string,
-  status: string,
-  plan?: string,
-) {
+export async function updateShopStatus(shopId: string, status: string, plan?: string) {
   try {
     const supabase = await requireAdmin()
 
     const updates: Record<string, unknown> = { subscription_status: status }
     if (plan) updates.plan = plan
 
-    // Set grace period when marking past_due
     if (status === 'past_due') {
       const grace = new Date()
       grace.setDate(grace.getDate() + 30)
@@ -65,6 +86,35 @@ export async function updateShopStatus(
 
     revalidatePath('/admin/shops')
     revalidatePath('/admin/subscriptions')
+    revalidatePath('/admin')
+  } catch (e: unknown) {
+    console.error(e)
+  }
+}
+
+export async function extendTrial(shopId: string, days: number) {
+  try {
+    const supabase = await requireAdmin()
+
+    // Extend from now (or current end date if still in future)
+    const { data: shop } = await supabase
+      .from('shops')
+      .select('trial_ends_at')
+      .eq('id', shopId)
+      .single()
+
+    const base = shop?.trial_ends_at && new Date(shop.trial_ends_at) > new Date()
+      ? new Date(shop.trial_ends_at)
+      : new Date()
+
+    base.setDate(base.getDate() + days)
+
+    await supabase.from('shops').update({
+      trial_ends_at: base.toISOString(),
+      subscription_status: 'trialing',
+    }).eq('id', shopId)
+
+    revalidatePath('/admin/shops')
     revalidatePath('/admin')
   } catch (e: unknown) {
     console.error(e)

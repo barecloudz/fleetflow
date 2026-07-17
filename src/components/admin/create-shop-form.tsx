@@ -5,15 +5,25 @@ import { createShop } from '@/app/actions/admin'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, X, AlertCircle, CheckCircle } from 'lucide-react'
+import { Plus, X, AlertCircle, CheckCircle, Copy, Check } from 'lucide-react'
 
 export default function CreateShopForm() {
   const [open, setOpen] = useState(false)
   const [state, formAction, pending] = useActionState(createShop, null)
+  const [copied, setCopied] = useState(false)
 
-  // Close modal on success after a moment
   if (state?.success && open) {
-    setTimeout(() => setOpen(false), 1200)
+    setTimeout(() => setOpen(false), 4000)
+  }
+
+  function copySuccess() {
+    if (!state?.success) return
+    const match = state.success.match(/log in at \/login with (.+) and the temporary password/)
+    if (match) {
+      navigator.clipboard.writeText(match[1])
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
   }
 
   return (
@@ -48,9 +58,18 @@ export default function CreateShopForm() {
             )}
 
             {state?.success && (
-              <div className="flex items-center gap-2 mb-4 p-3 rounded-lg text-sm text-green-400" style={{ background: 'oklch(0.35 0.1 145 / 20%)', border: '1px solid oklch(0.5 0.15 145 / 30%)' }}>
-                <CheckCircle size={14} className="shrink-0" />
-                {state.success}
+              <div className="mb-4 p-3 rounded-lg text-sm text-green-400" style={{ background: 'oklch(0.35 0.1 145 / 20%)', border: '1px solid oklch(0.5 0.15 145 / 30%)' }}>
+                <div className="flex items-start gap-2">
+                  <CheckCircle size={14} className="shrink-0 mt-0.5" />
+                  <p>{state.success}</p>
+                </div>
+                <button
+                  onClick={copySuccess}
+                  className="mt-2 flex items-center gap-1.5 text-xs text-green-300/70 hover:text-green-300 transition-colors"
+                >
+                  {copied ? <Check size={11} /> : <Copy size={11} />}
+                  {copied ? 'Copied!' : 'Copy owner email'}
+                </button>
               </div>
             )}
 
@@ -60,9 +79,19 @@ export default function CreateShopForm() {
                 <Input name="name" required placeholder="Mike's Auto Repair" className="bg-white/5 border-white/10 text-white placeholder:text-white/25" />
               </div>
 
+              <div className="pt-1 pb-0.5">
+                <p className="text-xs text-white/40 uppercase tracking-wider font-medium">Owner Login Credentials</p>
+                <p className="text-xs text-white/30 mt-0.5">Share these with the shop owner so they can sign in</p>
+              </div>
+
               <div className="space-y-1.5">
-                <Label className="text-sm text-white/70">Email</Label>
-                <Input name="email" type="email" placeholder="owner@shop.com" className="bg-white/5 border-white/10 text-white placeholder:text-white/25" />
+                <Label className="text-sm text-white/70">Owner email *</Label>
+                <Input name="owner_email" type="email" required placeholder="owner@shop.com" className="bg-white/5 border-white/10 text-white placeholder:text-white/25" />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-sm text-white/70">Temporary password *</Label>
+                <Input name="temp_password" type="text" required minLength={8} placeholder="Min. 8 characters" className="bg-white/5 border-white/10 text-white placeholder:text-white/25" />
               </div>
 
               <div className="space-y-1.5">
@@ -79,8 +108,8 @@ export default function CreateShopForm() {
                     className="w-full rounded-lg px-3 py-2 text-sm text-white border"
                     style={{ background: 'oklch(1 0 0 / 5%)', borderColor: 'oklch(1 0 0 / 10%)' }}
                   >
-                    <option value="starter">Starter</option>
-                    <option value="pro">Pro</option>
+                    <option value="starter">Starter — $49/mo</option>
+                    <option value="pro">Pro — $149/mo</option>
                     <option value="enterprise">Enterprise</option>
                   </select>
                 </div>
@@ -89,12 +118,12 @@ export default function CreateShopForm() {
                   <Label className="text-sm text-white/70">Access</Label>
                   <select
                     name="status"
-                    defaultValue="active"
+                    defaultValue="trialing"
                     className="w-full rounded-lg px-3 py-2 text-sm text-white border"
                     style={{ background: 'oklch(1 0 0 / 5%)', borderColor: 'oklch(1 0 0 / 10%)' }}
                   >
+                    <option value="trialing">Free Trial (14 days)</option>
                     <option value="active">Active (free access)</option>
-                    <option value="trialing">Trial</option>
                     <option value="suspended">Suspended</option>
                   </select>
                 </div>

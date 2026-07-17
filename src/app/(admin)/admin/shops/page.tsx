@@ -9,7 +9,7 @@ export default async function AdminShopsPage() {
 
   const { data: shops } = await supabase
     .from('shops')
-    .select('id, name, email, phone, plan, subscription_status, created_at')
+    .select('id, name, email, phone, plan, subscription_status, trial_ends_at, created_at')
     .order('created_at', { ascending: false })
 
   return (
@@ -29,7 +29,7 @@ export default async function AdminShopsPage() {
         <table className="w-full">
           <thead>
             <tr style={{ borderBottom: '1px solid oklch(1 0 0 / 7%)' }}>
-              {['Shop', 'Email', 'Plan', 'Status', 'Joined', 'Actions'].map(h => (
+              {['Shop', 'Email', 'Plan', 'Status', 'Trial', 'Joined', 'Actions'].map(h => (
                 <th key={h} className="px-5 py-3 text-left text-xs text-white/30 font-medium uppercase tracking-wider">
                   {h}
                 </th>
@@ -58,6 +58,9 @@ export default async function AdminShopsPage() {
                 <td className="px-5 py-3.5">
                   <StatusBadge status={shop.subscription_status} />
                 </td>
+                <td className="px-5 py-3.5 text-sm">
+                  <TrialCell trialEndsAt={shop.trial_ends_at} status={shop.subscription_status} />
+                </td>
                 <td className="px-5 py-3.5 text-sm text-white/40">
                   {new Date(shop.created_at).toLocaleDateString()}
                 </td>
@@ -67,7 +70,7 @@ export default async function AdminShopsPage() {
               </tr>
             )) : (
               <tr>
-                <td colSpan={6} className="px-5 py-12 text-center text-sm text-white/30">
+                <td colSpan={7} className="px-5 py-12 text-center text-sm text-white/30">
                   No shops yet. Create one above.
                 </td>
               </tr>
@@ -76,6 +79,19 @@ export default async function AdminShopsPage() {
         </table>
       </div>
     </div>
+  )
+}
+
+function TrialCell({ trialEndsAt, status }: { trialEndsAt: string | null; status: string }) {
+  if (!trialEndsAt || status !== 'trialing') return <span className="text-white/20">—</span>
+  const end = new Date(trialEndsAt)
+  const daysLeft = Math.ceil((end.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+  if (daysLeft < 0) return <span className="text-red-400 text-xs">Expired</span>
+  const color = daysLeft <= 3 ? 'text-amber-400' : 'text-white/50'
+  return (
+    <span className={`text-xs ${color}`}>
+      {daysLeft}d left
+    </span>
   )
 }
 

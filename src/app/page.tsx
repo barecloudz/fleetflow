@@ -54,13 +54,13 @@ function Nav() {
           {/* CTA buttons */}
           <div className="hidden md:flex items-center gap-3">
             <Link
-              href="/dashboard"
+              href="/login"
               className="text-sm px-4 py-2 rounded-lg border border-white/10 text-foreground/80 hover:text-foreground hover:border-white/20 transition-all"
             >
               Sign In
             </Link>
             <Link
-              href="/dashboard"
+              href="/signup"
               className="gradient-blue glow-blue-sm text-sm px-4 py-2 rounded-lg font-medium text-white transition-all hover:opacity-90"
             >
               Start Free Trial
@@ -81,14 +81,14 @@ function Nav() {
         {menuOpen && (
           <div
             className="md:hidden py-4 border-t flex flex-col gap-4"
-            style={{ borderColor: "oklch(1 0 0 / 8%)" }}
+            style={{ borderColor: "oklch(1 0 0 / 8%)", background: "oklch(0.11 0.018 255 / 98%)" }}
           >
             <a href="#features" className="text-sm text-muted-foreground" onClick={() => setMenuOpen(false)}>Features</a>
             <a href="#pricing" className="text-sm text-muted-foreground" onClick={() => setMenuOpen(false)}>Pricing</a>
             <a href="#about" className="text-sm text-muted-foreground" onClick={() => setMenuOpen(false)}>About</a>
             <div className="flex flex-col gap-2 pt-2">
-              <Link href="/dashboard" className="text-sm px-4 py-2 rounded-lg border border-white/10 text-center">Sign In</Link>
-              <Link href="/dashboard" className="gradient-blue text-sm px-4 py-2 rounded-lg font-medium text-white text-center">Start Free Trial</Link>
+              <Link href="/login" className="text-sm px-4 py-2 rounded-lg border border-white/10 text-center text-foreground/80">Sign In</Link>
+              <Link href="/signup" className="gradient-blue text-sm px-4 py-2 rounded-lg font-medium text-white text-center">Start Free Trial</Link>
             </div>
           </div>
         )}
@@ -135,7 +135,7 @@ function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <Link
-                href="/dashboard"
+                href="/signup"
                 className="gradient-blue glow-blue inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white text-base transition-all hover:opacity-90 hover:scale-[1.02]"
               >
                 Start Free Trial
@@ -389,7 +389,7 @@ const plans = [
       "Email support",
     ],
     cta: "Get Started",
-    href: "/dashboard",
+    href: "/signup",
     highlight: false,
   },
   {
@@ -408,7 +408,7 @@ const plans = [
       "Priority support",
     ],
     cta: "Start Free Trial",
-    href: "/dashboard",
+    href: "/signup",
     highlight: true,
     badge: "Most Popular",
   },
@@ -428,7 +428,7 @@ const plans = [
       "SLA guarantee",
     ],
     cta: "Contact Sales",
-    href: "/dashboard",
+    href: "/signup",
     highlight: false,
   },
 ];
@@ -543,7 +543,7 @@ function CTABanner() {
               Join 2,400+ shops already using FleetFlow to streamline operations and grow revenue.
             </p>
             <Link
-              href="/dashboard"
+              href="/signup"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white font-semibold text-base transition-all hover:bg-white/90 hover:scale-[1.02]"
               style={{ color: "oklch(0.50 0.22 255)" }}
             >
