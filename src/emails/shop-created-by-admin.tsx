@@ -1,6 +1,6 @@
 import {
   Body, Button, Container, Head, Heading, Hr, Html,
-  Preview, Section, Text, Tailwind, Row, Column,
+  Img, Preview, Section, Text, Row, Column,
 } from '@react-email/components'
 
 interface ShopCreatedEmailProps {
@@ -10,6 +10,8 @@ interface ShopCreatedEmailProps {
   plan: string
   loginUrl: string
 }
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://fleetflowunited.com'
 
 export default function ShopCreatedEmail({
   shopName,
@@ -22,91 +24,96 @@ export default function ShopCreatedEmail({
     <Html>
       <Head />
       <Preview>Your FleetFlow account for {shopName} is ready — here are your login details</Preview>
-      <Tailwind>
-        <Body style={body}>
-          <Container style={container}>
-            {/* Header */}
-            <Section style={header}>
-              <Text style={logo}>⚡ FleetFlow</Text>
-            </Section>
+      <Body style={body}>
+        <Container style={container}>
 
-            {/* Hero */}
-            <Section style={{ padding: '40px 40px 28px' }}>
-              <Heading style={h1}>Your shop account is ready</Heading>
-              <Text style={subtext}>
-                <strong style={{ color: '#fff' }}>{shopName}</strong> has been set up on FleetFlow.
-                Use the credentials below to sign in and get started.
-              </Text>
-            </Section>
+          {/* Header */}
+          <Section style={header}>
+            <Img
+              src={`${APP_URL}/logo.png`}
+              alt="FleetFlow"
+              height={44}
+              style={{ display: 'block' }}
+            />
+          </Section>
 
-            {/* Credentials box */}
-            <Section style={{ padding: '0 40px 32px' }}>
-              <div style={credentialsBox}>
-                <Text style={credHeader}>Your Login Credentials</Text>
-                <Row>
-                  <Column style={credLabel}>Login URL</Column>
-                  <Column style={credValue}>fleetflow.app/login</Column>
-                </Row>
-                <Hr style={credDivider} />
-                <Row>
-                  <Column style={credLabel}>Email</Column>
-                  <Column style={credValue}>{email}</Column>
-                </Row>
-                <Hr style={credDivider} />
-                <Row>
-                  <Column style={credLabel}>Password</Column>
-                  <Column style={{ ...credValue, fontFamily: 'monospace', letterSpacing: '1px' }}>
-                    {tempPassword}
-                  </Column>
-                </Row>
-                <Hr style={credDivider} />
-                <Row>
-                  <Column style={credLabel}>Plan</Column>
-                  <Column style={{ ...credValue, textTransform: 'capitalize' as const }}>{plan}</Column>
-                </Row>
-              </div>
-              <Text style={warningText}>
-                ⚠️ Change your password after your first login in Account Settings.
-              </Text>
-            </Section>
+          {/* Hero */}
+          <Section style={{ padding: '40px 40px 28px' }}>
+            <Heading style={h1}>Your shop account is ready</Heading>
+            <Text style={subtext}>
+              <strong style={{ color: '#fff' }}>{shopName}</strong> has been set up on FleetFlow.
+              Use the credentials below to sign in and get started.
+            </Text>
+          </Section>
 
-            <Section style={{ padding: '0 40px 32px', textAlign: 'center' as const }}>
-              <Button href={loginUrl} style={primaryButton}>
-                Sign In to FleetFlow →
-              </Button>
-            </Section>
+          {/* Credentials box */}
+          <Section style={{ padding: '0 40px 32px' }}>
+            <div style={credentialsBox}>
+              <Text style={credHeader}>Your Login Credentials</Text>
+              <Row>
+                <Column style={credLabel}>Login URL</Column>
+                <Column style={credValue}>{loginUrl}</Column>
+              </Row>
+              <Hr style={credDivider} />
+              <Row>
+                <Column style={credLabel}>Email</Column>
+                <Column style={credValue}>{email}</Column>
+              </Row>
+              <Hr style={credDivider} />
+              <Row>
+                <Column style={credLabel}>Password</Column>
+                <Column style={{ ...credValue, fontFamily: 'monospace', letterSpacing: '1px' }}>
+                  {tempPassword}
+                </Column>
+              </Row>
+              <Hr style={credDivider} />
+              <Row>
+                <Column style={credLabel}>Plan</Column>
+                <Column style={{ ...credValue, textTransform: 'capitalize' as const }}>{plan}</Column>
+              </Row>
+            </div>
+            <Text style={warningText}>
+              ⚠️ Change your password after your first login in Account Settings.
+            </Text>
+          </Section>
 
-            <Hr style={divider} />
+          <Section style={{ padding: '0 40px 32px', textAlign: 'center' as const }}>
+            <Button href={loginUrl} style={primaryButton}>
+              Sign In to FleetFlow →
+            </Button>
+          </Section>
 
-            {/* Quick start */}
-            <Section style={{ padding: '28px 40px' }}>
-              <Heading style={h2}>Get started in 3 steps</Heading>
-              {[
-                ['1', 'Add your first customer', 'Go to Customers → New Customer'],
-                ['2', 'Create a work order', 'Go to Work Orders → New Work Order'],
-                ['3', 'Add your inventory', 'Go to Inventory → Add Parts'],
-              ].map(([num, title, desc]) => (
-                <div key={num} style={stepItem}>
-                  <div style={stepNumber}>{num}</div>
-                  <div>
-                    <Text style={stepTitle}>{title}</Text>
-                    <Text style={stepDesc}>{desc}</Text>
-                  </div>
+          <Hr style={divider} />
+
+          {/* Quick start */}
+          <Section style={{ padding: '28px 40px' }}>
+            <Heading style={h2}>Get started in 3 steps</Heading>
+            {[
+              ['1', 'Add your first customer', 'Go to Customers → New Customer'],
+              ['2', 'Create a work order', 'Go to Work Orders → New Work Order'],
+              ['3', 'Add your inventory', 'Go to Inventory → Add Parts'],
+            ].map(([num, title, desc]) => (
+              <div key={num} style={stepItem}>
+                <div style={stepNumber}>{num}</div>
+                <div>
+                  <Text style={stepTitle}>{title}</Text>
+                  <Text style={stepDesc}>{desc}</Text>
                 </div>
-              ))}
-            </Section>
+              </div>
+            ))}
+          </Section>
 
-            <Hr style={divider} />
+          <Hr style={divider} />
 
-            <Section style={footer}>
-              <Text style={footerText}>
-                Questions? Reply to this email and we'll help you out.
-              </Text>
-              <Text style={footerText}>© 2026 FleetFlow · Built for modern auto shops</Text>
-            </Section>
-          </Container>
-        </Body>
-      </Tailwind>
+          <Section style={footer}>
+            <Text style={footerText}>
+              Questions? Reply to this email and we&apos;ll help you out.
+            </Text>
+            <Text style={footerText}>© 2026 FleetFlow · Built for modern auto shops</Text>
+          </Section>
+
+        </Container>
+      </Body>
     </Html>
   )
 }
@@ -114,9 +121,9 @@ export default function ShopCreatedEmail({
 ShopCreatedEmail.PreviewProps = {
   shopName: "Mike's Auto Repair",
   email: 'mike@mikesauto.com',
-  tempPassword: 'FleetFlow2026!',
+  tempPassword: 'FleetABC12341!',
   plan: 'starter',
-  loginUrl: 'https://fleetflow.app/login',
+  loginUrl: 'https://fleetflowunited.com/login',
 }
 
 const body: React.CSSProperties = {
@@ -139,13 +146,6 @@ const header: React.CSSProperties = {
   background: 'linear-gradient(135deg, #1e2a6e 0%, #0f1535 100%)',
   padding: '24px 40px',
   borderBottom: '1px solid rgba(255,255,255,0.06)',
-}
-
-const logo: React.CSSProperties = {
-  color: '#7c9ff5',
-  fontSize: '20px',
-  fontWeight: '800',
-  margin: '0',
 }
 
 const h1: React.CSSProperties = {
