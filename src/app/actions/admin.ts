@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendShopCreatedEmail } from '@/lib/emails'
+import { sendShopCreatedEmail, sendBroadcastEmail } from '@/lib/emails'
 
 async function requireAdmin() {
   const supabase = await createClient()
@@ -162,5 +162,43 @@ export async function extendTrial(shopId: string, days: number) {
     revalidatePath('/admin')
   } catch (e: unknown) {
     console.error(e)
+  }
+}
+
+export async function broadcastEmail(
+  prevState: { error?: string; success?: string } | null,
+  formData: FormData
+): Promise<{ error?: string; success?: string }> {
+  try {
+    await requireAdmin()
+    const adminClient = createAdminClient()
+
+    const segment = formData.get('segment') as string
+    const subject = formData.get('subject') as string
+    const body = formData.get('body') as string
+
+    let query = adminClient.from('shops').select('id, name, email, subscription_status')
+    if (segment !== 'all') {
+      query = query.eq('subscription_status', segment)
+    }
+    const { data: shops } = await query
+
+    const targets = (shops ?? []).filter(s => s.email)
+    if (targets.length === 0) return { error: 'No shops with email addresses in that segment.' }
+
+    const results = await Promise.allSettled(
+      targets.map(shop =>
+        sendBroadcastEmail({ to: shop.email!, shopName: shop.name, subject, body })
+      )
+    )
+
+    const failed = results.filter(r => r.status === 'rejected').length
+    const sent = results.length - failed
+
+    if (failed > 0 && sent === 0) return { error: `All ${failed} emails failed to send.` }
+    if (failed > 0) return { success: `Sent to ${sent} shops. ${failed} failed.` }
+    return { success: `Broadcast sent to ${sent} shop${sent !== 1 ? 's' : ''}.` }
+  } catch (e: unknown) {
+    return { error: e instanceof Error ? e.message : 'Unknown error' }
   }
 }

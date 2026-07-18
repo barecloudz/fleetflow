@@ -3,6 +3,7 @@ import WelcomeEmail from '@/emails/welcome'
 import InvoicePaidEmail from '@/emails/invoice-paid'
 import TrialEndingEmail from '@/emails/trial-ending'
 import ShopCreatedEmail from '@/emails/shop-created-by-admin'
+import BroadcastEmail from '@/emails/broadcast'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://fleetflow.app'
 
@@ -102,5 +103,24 @@ export async function sendTrialEndingEmail({
       ? `⚠️ Your FleetFlow trial ends in ${daysLeft} day${daysLeft === 1 ? '' : 's'}`
       : `Your FleetFlow trial ends in ${daysLeft} days`,
     react: TrialEndingEmail({ shopName, firstName, daysLeft, upgradeUrl: `${APP_URL}/settings` }),
+  })
+}
+
+export async function sendBroadcastEmail({
+  to,
+  shopName,
+  subject,
+  body,
+}: {
+  to: string
+  shopName: string
+  subject: string
+  body: string
+}) {
+  return send({
+    from: FROM,
+    to,
+    subject,
+    react: BroadcastEmail({ shopName, subject, body }),
   })
 }

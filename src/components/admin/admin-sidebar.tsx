@@ -2,13 +2,15 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Store, CreditCard, LogOut, ShieldCheck } from 'lucide-react'
+import { LayoutDashboard, Store, CreditCard, Users, Mail, LogOut, ShieldCheck } from 'lucide-react'
 import { logout } from '@/app/actions/auth'
 
 const navItems = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard, exact: true },
   { href: '/admin/shops', label: 'Shops', icon: Store },
   { href: '/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
+  { href: '/admin/users', label: 'Users', icon: Users },
+  { href: '/admin/email', label: 'Email Broadcast', icon: Mail },
 ]
 
 export default function AdminSidebar({ adminName }: { adminName: string }) {
