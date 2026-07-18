@@ -10,4 +10,4 @@ export function getResend(): Resend {
   return _resend
 }
 
-export const FROM = 'FleetFlow <no-reply@fleetflow.app>'
+export const FROM = 'FleetFlow <no-reply@fleetflowunited.com>'
