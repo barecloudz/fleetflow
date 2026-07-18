@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { useActionState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -9,7 +11,13 @@ import { Mail, Lock, ArrowLeft, AlertCircle } from 'lucide-react'
 import { login } from '@/app/actions/auth'
 
 export default function LoginPage() {
+  return <Suspense><LoginForm /></Suspense>
+}
+
+function LoginForm() {
   const [state, formAction, pending] = useActionState(login, null)
+  const searchParams = useSearchParams()
+  const linkExpired = searchParams.get('error') === 'link_expired'
 
   return (
     <div
@@ -46,10 +54,10 @@ export default function LoginPage() {
             <p className="text-sm text-white/50 mt-1">Sign in to your shop dashboard</p>
           </div>
 
-          {state?.error && (
+          {(state?.error || linkExpired) && (
             <div className="flex items-center gap-2 mb-5 p-3 rounded-lg text-sm text-red-400" style={{ background: 'oklch(0.5 0.2 25 / 10%)', border: '1px solid oklch(0.5 0.2 25 / 20%)' }}>
               <AlertCircle size={14} className="shrink-0" />
-              {state.error}
+              {linkExpired ? 'That reset link has expired. Please request a new one.' : state?.error}
             </div>
           )}
 
@@ -72,9 +80,9 @@ export default function LoginPage() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password" className="text-sm text-white/70">Password</Label>
-                <button type="button" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
+                <Link href="/forgot-password" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
                   Forgot password?
-                </button>
+                </Link>
               </div>
               <div className="relative">
                 <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />

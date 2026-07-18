@@ -70,3 +70,30 @@ export async function logout() {
   await supabase.auth.signOut()
   redirect('/login')
 }
+
+export async function forgotPassword(prevState: { error?: string; success?: string } | null, formData: FormData) {
+  const supabase = await createClient()
+  const email = formData.get('email') as string
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://fleetflowunited.com'
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${appUrl}/auth/callback?next=/reset-password`,
+  })
+
+  if (error) return { error: error.message }
+  return { success: 'Check your email — we sent a password reset link.' }
+}
+
+export async function resetPassword(prevState: { error?: string; success?: string } | null, formData: FormData) {
+  const supabase = await createClient()
+  const password = formData.get('password') as string
+  const confirm = formData.get('confirm') as string
+
+  if (password !== confirm) return { error: 'Passwords do not match.' }
+  if (password.length < 8) return { error: 'Password must be at least 8 characters.' }
+
+  const { error } = await supabase.auth.updateUser({ password })
+  if (error) return { error: error.message }
+
+  redirect('/dashboard')
+}
