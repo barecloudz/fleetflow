@@ -32,7 +32,7 @@ export default async function AdminSubscriptionsPage() {
       </div>
 
       <div
-        className="rounded-xl overflow-hidden"
+        className="rounded-xl"
         style={{ background: 'oklch(1 0 0 / 4%)', border: '1px solid oklch(1 0 0 / 7%)' }}
       >
         <table className="w-full">

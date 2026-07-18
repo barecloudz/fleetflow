@@ -9,7 +9,7 @@ export default async function AdminShopsPage() {
 
   const { data: shops } = await supabase
     .from('shops')
-    .select('id, name, email, phone, plan, subscription_status, trial_ends_at, created_at')
+    .select('id, name, email, phone, plan, subscription_status, created_at')
     .order('created_at', { ascending: false })
 
   return (
@@ -23,13 +23,13 @@ export default async function AdminShopsPage() {
       </div>
 
       <div
-        className="rounded-xl overflow-hidden"
+        className="rounded-xl"
         style={{ background: 'oklch(1 0 0 / 4%)', border: '1px solid oklch(1 0 0 / 7%)' }}
       >
         <table className="w-full">
           <thead>
             <tr style={{ borderBottom: '1px solid oklch(1 0 0 / 7%)' }}>
-              {['Shop', 'Email', 'Plan', 'Status', 'Trial', 'Joined', 'Actions'].map(h => (
+              {['Shop', 'Email', 'Plan', 'Status', 'Joined', 'Actions'].map(h => (
                 <th key={h} className="px-5 py-3 text-left text-xs text-white/30 font-medium uppercase tracking-wider">
                   {h}
                 </th>
@@ -58,10 +58,7 @@ export default async function AdminShopsPage() {
                 <td className="px-5 py-3.5">
                   <StatusBadge status={shop.subscription_status} />
                 </td>
-                <td className="px-5 py-3.5 text-sm">
-                  <TrialCell trialEndsAt={shop.trial_ends_at} status={shop.subscription_status} />
-                </td>
-                <td className="px-5 py-3.5 text-sm text-white/40">
+<td className="px-5 py-3.5 text-sm text-white/40">
                   {new Date(shop.created_at).toLocaleDateString()}
                 </td>
                 <td className="px-5 py-3.5">
@@ -70,7 +67,7 @@ export default async function AdminShopsPage() {
               </tr>
             )) : (
               <tr>
-                <td colSpan={7} className="px-5 py-12 text-center text-sm text-white/30">
+                <td colSpan={6} className="px-5 py-12 text-center text-sm text-white/30">
                   No shops yet. Create one above.
                 </td>
               </tr>

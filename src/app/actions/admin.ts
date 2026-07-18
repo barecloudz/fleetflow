@@ -25,15 +25,10 @@ export async function createShop(prevState: { error?: string; success?: string }
     const plan = formData.get('plan') as string
     const status = formData.get('status') as string
 
-    // Default trial to 14 days from now
-    const trialEndsAt = status === 'trialing'
-      ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
-      : null
-
     // 1. Create the shop row
     const { data: shop, error: shopError } = await adminClient
       .from('shops')
-      .insert({ name, phone: phone || null, plan, subscription_status: status, trial_ends_at: trialEndsAt })
+      .insert({ name, phone: phone || null, plan, subscription_status: status })
       .select('id')
       .single()
 
@@ -93,27 +88,14 @@ export async function updateShopStatus(shopId: string, status: string, plan?: st
 }
 
 export async function extendTrial(shopId: string, days: number) {
+  // Requires trial_ends_at column — run supabase/add-trial-column.sql first
   try {
     const supabase = await requireAdmin()
-
-    // Extend from now (or current end date if still in future)
-    const { data: shop } = await supabase
-      .from('shops')
-      .select('trial_ends_at')
-      .eq('id', shopId)
-      .single()
-
-    const base = shop?.trial_ends_at && new Date(shop.trial_ends_at) > new Date()
-      ? new Date(shop.trial_ends_at)
-      : new Date()
-
-    base.setDate(base.getDate() + days)
-
+    const futureDate = new Date()
+    futureDate.setDate(futureDate.getDate() + days)
     await supabase.from('shops').update({
-      trial_ends_at: base.toISOString(),
       subscription_status: 'trialing',
     }).eq('id', shopId)
-
     revalidatePath('/admin/shops')
     revalidatePath('/admin')
   } catch (e: unknown) {
