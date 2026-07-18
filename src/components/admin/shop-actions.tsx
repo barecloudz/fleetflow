@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { updateShopStatus, extendTrial, deleteShop } from '@/app/actions/admin'
-import { ChevronDown, Trash2, AlertTriangle } from 'lucide-react'
+import { updateShopStatus, extendTrial, deleteShop, resendCredentials } from '@/app/actions/admin'
+import { ChevronDown, Trash2, AlertTriangle, Mail } from 'lucide-react'
 
 const statusOptions = [
   { value: 'active',    label: 'Set Active',    color: 'oklch(0.65 0.18 145)' },
@@ -29,6 +29,7 @@ export default function ShopActions({
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteInput, setDeleteInput] = useState('')
   const [deleting, setDeleting] = useState(false)
+  const [resendMsg, setResendMsg] = useState('')
 
   async function handleStatus(status: string) {
     setLoading(true)
@@ -51,6 +52,15 @@ export default function ShopActions({
     setLoading(false)
   }
 
+  async function handleResendCredentials() {
+    setLoading(true)
+    setOpen(false)
+    const result = await resendCredentials(shopId)
+    setResendMsg(result.success ?? result.error ?? 'Done')
+    setTimeout(() => setResendMsg(''), 4000)
+    setLoading(false)
+  }
+
   async function handleDelete() {
     if (deleteInput !== 'DELETE') return
     setDeleting(true)
@@ -61,6 +71,15 @@ export default function ShopActions({
 
   return (
     <>
+      {resendMsg && (
+        <div
+          className="fixed bottom-4 right-4 z-50 px-4 py-2.5 rounded-xl text-sm font-medium text-white shadow-lg"
+          style={{ background: resendMsg.startsWith('New credentials') ? 'oklch(0.35 0.12 145)' : 'oklch(0.4 0.18 25)', border: '1px solid oklch(1 0 0 / 15%)' }}
+        >
+          {resendMsg}
+        </div>
+      )}
+
       <div className="relative">
         <button
           onClick={() => setOpen(v => !v)}
@@ -120,6 +139,16 @@ export default function ShopActions({
                   Switch to {plan}
                 </button>
               ))}
+
+              <div className="my-1" style={{ borderTop: '1px solid oklch(1 0 0 / 7%)' }} />
+
+              <button
+                onClick={handleResendCredentials}
+                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-white/5 transition-colors text-white/60 hover:text-white"
+              >
+                <Mail size={12} />
+                Resend Credentials
+              </button>
 
               <div className="my-1" style={{ borderTop: '1px solid oklch(1 0 0 / 7%)' }} />
 

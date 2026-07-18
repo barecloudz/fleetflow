@@ -118,6 +118,37 @@ export async function deleteShop(shopId: string) {
   }
 }
 
+export async function resendCredentials(shopId: string): Promise<{ success?: string; error?: string }> {
+  try {
+    await requireAdmin()
+    const adminClient = createAdminClient()
+
+    // Get shop info
+    const { data: shop } = await adminClient.from('shops').select('name, plan').eq('id', shopId).single()
+    if (!shop) return { error: 'Shop not found' }
+
+    // Find the owner profile
+    const { data: profile } = await adminClient.from('profiles').select('id').eq('shop_id', shopId).eq('role', 'owner').single()
+    if (!profile) return { error: 'No owner found for this shop' }
+
+    // Get their email from Supabase Auth
+    const { data: { user } } = await adminClient.auth.admin.getUserById(profile.id)
+    if (!user?.email) return { error: 'No email found for this owner' }
+
+    // Generate a new temp password and update the account
+    const newTempPassword = `Fleet${Math.random().toString(36).slice(2, 8).toUpperCase()}${Math.floor(Math.random() * 9000 + 1000)}!`
+    const { error: pwError } = await adminClient.auth.admin.updateUserById(profile.id, { password: newTempPassword })
+    if (pwError) return { error: pwError.message }
+
+    // Send credentials email
+    await sendShopCreatedEmail({ to: user.email, shopName: shop.name, tempPassword: newTempPassword, plan: shop.plan })
+
+    return { success: `New credentials sent to ${user.email}` }
+  } catch (e: unknown) {
+    return { error: e instanceof Error ? e.message : 'Unknown error' }
+  }
+}
+
 export async function extendTrial(shopId: string, days: number) {
   // Requires trial_ends_at column — run supabase/add-trial-column.sql first
   try {
