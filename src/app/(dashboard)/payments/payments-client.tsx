@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { DollarSign, TrendingUp, AlertCircle, Clock, MoreHorizontal, Plus, CreditCard } from 'lucide-react'
+import { DollarSign, TrendingUp, AlertCircle, Clock, MoreHorizontal, Plus, CreditCard, Printer } from 'lucide-react'
 import { addInvoice, updateInvoiceStatus } from '@/app/actions/shop'
 
 interface Invoice {
@@ -169,6 +169,7 @@ export default function PaymentsClient({ initialInvoices, customers, workOrders 
                       <DropdownMenu>
                         <DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="size-7 text-white/30 hover:text-white hover:bg-white/8 opacity-0 group-hover:opacity-100"><MoreHorizontal className="size-4" /></Button>} />
                         <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => window.open(`/invoice/${inv.id}/print`, '_blank')}><Printer className="size-3.5 mr-2" />Print Invoice</DropdownMenuItem>
                           {inv.status !== 'Paid' && <DropdownMenuItem onClick={() => startTransition(() => updateInvoiceStatus(inv.id, 'Paid'))}>Mark Paid</DropdownMenuItem>}
                           {inv.status === 'Pending' && <DropdownMenuItem onClick={() => startTransition(() => updateInvoiceStatus(inv.id, 'Overdue'))}>Mark Overdue</DropdownMenuItem>}
                           <DropdownMenuItem variant="destructive" onClick={() => startTransition(() => updateInvoiceStatus(inv.id, 'Void'))}>Void</DropdownMenuItem>

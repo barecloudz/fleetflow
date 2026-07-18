@@ -101,8 +101,8 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
                       render={
-                        <Link href={item.href} className="flex items-center gap-3">
-                          <item.icon className="size-9 shrink-0" />
+                        <Link href={item.href} prefetch={true} className="flex items-center gap-3">
+                          <item.icon className="size-4 shrink-0" />
                           <span>{item.title}</span>
                           {active && <ChevronRight className="ml-auto size-3 text-primary/60" />}
                         </Link>
@@ -129,8 +129,8 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               render={
-                <Link href="/settings" className="flex items-center gap-3">
-                  <Settings className="size-9 shrink-0" />
+                <Link href="/settings" prefetch={true} className="flex items-center gap-3">
+                  <Settings className="size-4 shrink-0" />
                   <span>Settings</span>
                 </Link>
               }
