@@ -1,4 +1,4 @@
-import { resend, FROM } from './resend'
+import { getResend, FROM } from './resend'
 import WelcomeEmail from '@/emails/welcome'
 import InvoicePaidEmail from '@/emails/invoice-paid'
 import TrialEndingEmail from '@/emails/trial-ending'
@@ -15,7 +15,7 @@ export async function sendWelcomeEmail({
   shopName: string
   firstName: string
 }) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: `Welcome to FleetFlow — ${shopName} is live 🚀`,
@@ -34,7 +34,7 @@ export async function sendShopCreatedEmail({
   tempPassword: string
   plan: string
 }) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: `Your FleetFlow account for ${shopName} is ready`,
@@ -63,7 +63,7 @@ export async function sendInvoicePaidEmail({
   amount: string
   paidAt: string
 }) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: `Payment received — ${invoiceNumber} for ${amount}`,
@@ -89,7 +89,7 @@ export async function sendTrialEndingEmail({
   firstName: string
   daysLeft: number
 }) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: daysLeft <= 3
