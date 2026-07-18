@@ -62,7 +62,7 @@ export default async function AdminSubscriptionsPage() {
                     : '—'}
                 </td>
                 <td className="px-5 py-3.5">
-                  <ShopActions shopId={shop.id} currentStatus={shop.subscription_status} currentPlan={shop.plan} />
+                  <ShopActions shopId={shop.id} shopName={shop.name} currentStatus={shop.subscription_status} currentPlan={shop.plan} />
                 </td>
               </tr>
             )) : (

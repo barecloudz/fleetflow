@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendShopCreatedEmail } from '@/lib/emails'
 
 async function requireAdmin() {
   const supabase = await createClient()
@@ -53,9 +54,12 @@ export async function createShop(prevState: { error?: string; success?: string }
       return { error: userError.message }
     }
 
+    // Send credentials email (non-blocking)
+    sendShopCreatedEmail({ to: ownerEmail, shopName: name, tempPassword, plan }).catch(console.error)
+
     revalidatePath('/admin/shops')
     revalidatePath('/admin')
-    return { success: `${name} created. Owner can log in at /login with ${ownerEmail} and the temporary password you set.` }
+    return { success: `${name} created. Login credentials sent to ${ownerEmail}.` }
   } catch (e: unknown) {
     return { error: e instanceof Error ? e.message : 'Unknown error' }
   }
@@ -81,6 +85,33 @@ export async function updateShopStatus(shopId: string, status: string, plan?: st
 
     revalidatePath('/admin/shops')
     revalidatePath('/admin/subscriptions')
+    revalidatePath('/admin')
+  } catch (e: unknown) {
+    console.error(e)
+  }
+}
+
+export async function deleteShop(shopId: string) {
+  try {
+    const adminClient = createAdminClient()
+    await requireAdmin()
+
+    // Delete all auth users belonging to this shop (via profiles)
+    const { data: profiles } = await adminClient
+      .from('profiles')
+      .select('id')
+      .eq('shop_id', shopId)
+
+    if (profiles) {
+      for (const profile of profiles) {
+        await adminClient.auth.admin.deleteUser(profile.id)
+      }
+    }
+
+    // Delete shop (cascades to all shop data via FK)
+    await adminClient.from('shops').delete().eq('id', shopId)
+
+    revalidatePath('/admin/shops')
     revalidatePath('/admin')
   } catch (e: unknown) {
     console.error(e)

@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { sendWelcomeEmail } from '@/lib/emails'
 
 export async function login(prevState: { error: string } | null, formData: FormData) {
   const supabase = await createClient()
@@ -57,6 +58,9 @@ export async function signup(prevState: { error: string } | null, formData: Form
   })
 
   if (authError) return { error: authError.message }
+
+  // Send welcome email (non-blocking — don't fail signup if email fails)
+  sendWelcomeEmail({ to: email, shopName, firstName }).catch(console.error)
 
   redirect('/dashboard')
 }
