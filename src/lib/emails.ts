@@ -6,6 +6,12 @@ import ShopCreatedEmail from '@/emails/shop-created-by-admin'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://fleetflow.app'
 
+async function send(payload: Parameters<ReturnType<typeof getResend>['emails']['send']>[0]) {
+  const { data, error } = await getResend().emails.send(payload)
+  if (error) throw new Error(error.message)
+  return data
+}
+
 export async function sendWelcomeEmail({
   to,
   shopName,
@@ -15,7 +21,7 @@ export async function sendWelcomeEmail({
   shopName: string
   firstName: string
 }) {
-  await getResend().emails.send({
+  return send({
     from: FROM,
     to,
     subject: `Welcome to FleetFlow — ${shopName} is live 🚀`,
@@ -34,7 +40,7 @@ export async function sendShopCreatedEmail({
   tempPassword: string
   plan: string
 }) {
-  await getResend().emails.send({
+  return send({
     from: FROM,
     to,
     subject: `Your FleetFlow account for ${shopName} is ready`,
@@ -63,7 +69,7 @@ export async function sendInvoicePaidEmail({
   amount: string
   paidAt: string
 }) {
-  await getResend().emails.send({
+  return send({
     from: FROM,
     to,
     subject: `Payment received — ${invoiceNumber} for ${amount}`,
@@ -89,7 +95,7 @@ export async function sendTrialEndingEmail({
   firstName: string
   daysLeft: number
 }) {
-  await getResend().emails.send({
+  return send({
     from: FROM,
     to,
     subject: daysLeft <= 3
