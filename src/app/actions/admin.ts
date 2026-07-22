@@ -45,6 +45,7 @@ export async function createShop(prevState: { error?: string; success?: string }
         first_name: '',
         last_name: '',
         role: 'owner',
+        must_change_password: true,
       },
     })
 
@@ -135,9 +136,12 @@ export async function resendCredentials(shopId: string): Promise<{ success?: str
     const { data: { user } } = await adminClient.auth.admin.getUserById(profile.id)
     if (!user?.email) return { error: 'No email found for this owner' }
 
-    // Generate a new temp password and update the account
+    // Generate a new temp password, update account, and flag that they must change it on next login
     const newTempPassword = `Fleet${Math.random().toString(36).slice(2, 8).toUpperCase()}${Math.floor(Math.random() * 9000 + 1000)}!`
-    const { error: pwError } = await adminClient.auth.admin.updateUserById(profile.id, { password: newTempPassword })
+    const { error: pwError } = await adminClient.auth.admin.updateUserById(profile.id, {
+      password: newTempPassword,
+      user_metadata: { ...user.user_metadata, must_change_password: true },
+    })
     if (pwError) return { error: pwError.message }
 
     // Send credentials email

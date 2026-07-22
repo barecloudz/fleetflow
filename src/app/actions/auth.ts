@@ -84,6 +84,24 @@ export async function forgotPassword(prevState: { error?: string; success?: stri
   return { success: 'Check your email — we sent a password reset link.' }
 }
 
+export async function changePassword(prevState: { error?: string; success?: string } | null, formData: FormData) {
+  const supabase = await createClient()
+  const password = formData.get('password') as string
+  const confirm = formData.get('confirm') as string
+
+  if (password !== confirm) return { error: 'Passwords do not match.' }
+  if (password.length < 8) return { error: 'Password must be at least 8 characters.' }
+
+  // Update password and clear the must_change_password flag
+  const { error } = await supabase.auth.updateUser({
+    password,
+    data: { must_change_password: false },
+  })
+  if (error) return { error: error.message }
+
+  return { success: 'Password updated.' }
+}
+
 export async function resetPassword(prevState: { error?: string; success?: string } | null, formData: FormData) {
   const supabase = await createClient()
   const password = formData.get('password') as string
